@@ -14,3 +14,19 @@ A website for tracking cryptocurrencies (Bitcoin, Ethereum, Solana, etc.). The m
 * Track specific currencies(Bitcoin, Etherium, Solana, etc.)
 * Exchange cyrrency using in-site balance
 * Default user/VIP User
+
+## How to run project
+
+1. Create virtual env
+2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+3. Apply migrations
+```bash
+python manage.py migrate
+```
+4. Run the server
+```bash
+python manage.py runserver
+```

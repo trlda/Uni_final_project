@@ -20,6 +20,7 @@ def get_price(symbol):
     filtered_data = {
             'symbol': symbol,
             'blockchain': data.get('Blockchain'),
+            'address': data.get('Address'),
             'price': data.get('Price'),
             'yesterday_price': data.get('PriceYesterday')
         }

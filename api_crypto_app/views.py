@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .services.dia_api import get_price
 
-curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "DOGE", "ADA", "WBTC", "HYPE", "LINK", "BCH"]
+curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "DOG", "ORDI", "WBTC", "HYPE", "LINK", "SATS"]
 
 class DIASymbolPrice(APIView):
     def get(self, request, format=None):

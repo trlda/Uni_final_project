@@ -44,10 +44,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'drf_spectacular',
-    'drf_spectacular_sidecar',
+    'rest_framework_swagger',
     'corsheaders',
     'api_crypto_app',
-    'main_page',
     'rest_framework',
     'users_app',
     'django.contrib.admin',
@@ -175,9 +174,3 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users_app.CustomUser'
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Crypto Currency Exchange API',
-    'DESCRIPTION': 'API documentation for the Crypto Exchange project.',
-    'VERSION': '1.0.0',
-}

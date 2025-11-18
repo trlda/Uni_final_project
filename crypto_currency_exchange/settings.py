@@ -44,6 +44,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'drf_spectacular',
+    'rest_framework_simplejwt',
     'rest_framework_swagger',
     'corsheaders',
     'api_crypto_app',
@@ -58,7 +59,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',,
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,11 +71,15 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:5500', # for VScode Liveserver extension 
-    'http://localhost:63342', # for PyCharm built-in liveserver
+    'http://localhost:63342',
+    'http://localhost:63343',# for PyCharm built-in liveserver
 ]
 
 ROOT_URLCONF = 'crypto_currency_exchange.urls'

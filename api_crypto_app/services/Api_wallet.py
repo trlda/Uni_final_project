@@ -1,3 +1,4 @@
+import os
 import requests
 import random
 from django.core.cache import cache

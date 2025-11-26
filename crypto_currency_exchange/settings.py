@@ -45,7 +45,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'drf_spectacular',
     'rest_framework_simplejwt',
-    'rest_framework_swagger',
     'corsheaders',
     'api_crypto_app',
     'rest_framework',

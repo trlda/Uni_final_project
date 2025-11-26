@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from .serializers import RegisterSerializer
 from .models import CustomUser
@@ -15,3 +15,7 @@ class Users(APIView):
         user = CustomUser.objects.all()
         serializer = RegisterSerializer(user, many=True)
         return Response(serializer.data)
+
+class UserDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = RegisterSerializer

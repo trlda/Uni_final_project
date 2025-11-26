@@ -26,6 +26,6 @@ def get_price(symbol):
         }
 
     if filtered_data['price'] is not None:
-        cache.set(cache_key, filtered_data, 7200)
+        cache.set(cache_key, filtered_data, 300)
         logger.info(f"Cache SET for {cache_key}")
         return filtered_data

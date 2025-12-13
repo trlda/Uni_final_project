@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 load_dotenv()
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,13 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'cache_data'),
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 # Quick-start development settings - unsuitable for production
@@ -76,7 +84,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:5500', # for VScode Liveserver extension 
+    'http://127.0.0.1:5500', # for VScode Liveserver extension
     'http://localhost:63342',
     'http://localhost:63343',# for PyCharm built-in liveserver
 ]

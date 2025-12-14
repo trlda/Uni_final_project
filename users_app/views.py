@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from .serializers import RegisterSerializer
 from .models import CustomUser
 from rest_framework.response import Response
+from .serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 
 
 
@@ -19,3 +20,18 @@ class Users(APIView):
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Reset link sent"}, status=200)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Password changed"}, status=200)

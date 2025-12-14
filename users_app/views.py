@@ -50,7 +50,6 @@ class SendCodeVerify(APIView):
         user = CustomUser.objects.get(email=email)
         code = str(random.randint(100000, 999999))
 
-        EmailVerification.objects.filter(user=user).delete()
         EmailVerification.objects.create(user=user, code=code)
 
         send_mail(
@@ -76,6 +75,8 @@ class VerifyCode(APIView):
         if not record:
             return Response({"message": "Verification code not found"}, status=status.HTTP_400_BAD_REQUEST)
 
+        record.user.is_active = True
+        record.user.save()
         record.delete()
 
         return Response({"message": "Email verified successfully"}, status=status.HTTP_200_OK)

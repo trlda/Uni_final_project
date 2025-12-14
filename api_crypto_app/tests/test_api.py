@@ -29,6 +29,7 @@ def test_get_balance_without_symbol(api_client):
 
 def test_get_balance_with_incorrect_address(api_client):
     response = api_client.get('/balance/?symbol=BTC&address=1A1zP1eP5QGefi2DMPTfTmv7DivfNa', format='json')
+    assert response.status_code == 400
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(

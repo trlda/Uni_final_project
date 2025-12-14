@@ -75,7 +75,7 @@ class VerifyCode(APIView):
             return Response({"message": "No email or code"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = CustomUser.objects.get(email=email)
-        record = EmailVerification.objects.filter(user=user, code=code)
+        record = EmailVerification.objects.filter(user=user, code=code).first()
 
         if not record:
             return Response({"message": "Verification code not found"}, status=status.HTTP_400_BAD_REQUEST)

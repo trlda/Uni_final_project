@@ -5,7 +5,7 @@ from rest_framework import status
 from .services.dia_api import get_price
 from .services.Api_wallet import get_btc_balance, get_eth_balance, get_solana_balance
 
-curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "DOG", "ORDI", "WBTC", "HYPE", "LINK", "SATS"]
+curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "ORDI", "WBTC", "HYPE", "LINK", "SATS"]
 
 class DIASymbolPrice(APIView):
     def get(self, request, format=None):

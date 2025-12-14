@@ -33,7 +33,7 @@ def test_get_balance_with_incorrect_address(api_client):
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "symbol",
-    ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "DOG", "ORDI", "WBTC", "HYPE", "LINK", "SATS"],
+    ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "ORDI", "WBTC", "HYPE", "LINK", "SATS"],
 )
 def test_get_price(api_client, symbol):
     response = api_client.get(f"/prices/?symbol={symbol}")

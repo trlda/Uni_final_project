@@ -22,7 +22,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop("password2")
-        return CustomUser.objects.create_user(**validated_data)
+        user = CustomUser.objects.create_user(**validated_data)
+        user.is_active = False
+        user.save()
+        return user
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()

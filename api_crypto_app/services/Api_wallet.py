@@ -18,7 +18,10 @@ def get_btc_balance(address):
     logger.info(f"Cache MISS for {cache_key} -> fetch from API")
     url = f"https://blockstream.info/api/address/{address}"
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
+    if response.status_code != 200:
+        logger.error(f"BTC API error {response.status_code}: {response.text}")
+        raise ValueError("Invalid address or API error")
     data = response.json()
     chain_stats = data['chain_stats']
     funded = chain_stats['funded_txo_sum']
@@ -50,7 +53,11 @@ def get_eth_balance(address):
         "id": random.randint(1, 999999)
     }
 
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, timeout=10)
+    if response.status_code != 200:
+        logger.error(f"ETH API error {response.status_code}: {response.text}")
+        raise ValueError("Invalid address or API error")
+
     data = response.json()
 
     result_hex = data['result']
@@ -79,7 +86,10 @@ def get_solana_balance(address):
         "params": [address]
     }
 
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, timeout=10)
+    if response.status_code != 200:
+        logger.error(f"SOL API error {response.status_code}: {response.text}")
+        raise ValueError("Invalid address or API error")
     data = response.json()
 
     result = data['result']

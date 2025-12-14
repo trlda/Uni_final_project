@@ -32,10 +32,7 @@ class CheckBalance(APIView):
         address = request.query_params.get('address')
 
         if not address or not symbol:
-            return Response(
-                {"error": "Currency or address were not entered"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "Currency or address were not entered"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             if symbol == "BTC":
@@ -45,10 +42,7 @@ class CheckBalance(APIView):
             elif symbol == "SOL":
                 balance = get_solana_balance(address)
             else:
-                return Response(
-                    {"error": f"Unsupported symbol entered: {symbol}"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                return Response({"error": f"Unsupported symbol entered: {symbol}"}, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(balance, status=status.HTTP_200_OK)
         except ValueError as e:

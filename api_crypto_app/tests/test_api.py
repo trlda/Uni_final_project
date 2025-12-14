@@ -30,13 +30,10 @@ def test_get_balance_with_incorrect_address(api_client):
     assert response.status_code == 400
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "symbol",
-    ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "ORDI", "WBTC", "HYPE", "LINK", "SATS"],
-)
-def test_get_price(api_client, symbol):
-    response = api_client.get(f"/prices/?symbol={symbol}")
-    assert response.status_code == 200
+def test_get_price(api_client, crypto_symbols):
+    for symbol in crypto_symbols:
+        response = api_client.get(f"/prices/?symbol={symbol}")
+        assert response.status_code == 200
 
 @pytest.mark.django_db
 def test_get_price_with_incorect_symbol(api_client):

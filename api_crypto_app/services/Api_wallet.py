@@ -81,9 +81,9 @@ def get_solana_balance(address):
     url = "https://api.mainnet-beta.solana.com"
     payload = {
         "jsonrpc": "2.0",
-        "id": random.randint(1, 999999),
         "method": "getBalance",
-        "params": [address]
+        "params": [address],
+        "id": random.randint(1, 999999)
     }
 
     response = requests.post(url, json=payload, timeout=10)

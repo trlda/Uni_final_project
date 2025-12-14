@@ -45,11 +45,16 @@ class SendCodeVerify(APIView):
         email = request.data.get("email")
 
         if not email:
-            return Response({"message": "No email"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "No email"}, status=400)
 
-        user = CustomUser.objects.get(email=email)
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        EmailVerification.objects.filter(user=user).delete()
+
         code = str(random.randint(100000, 999999))
-
         EmailVerification.objects.create(user=user, code=code)
 
         send_mail(

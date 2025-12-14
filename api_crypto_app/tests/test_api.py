@@ -1,6 +1,4 @@
 import pytest
-from django.urls import reverse
-
 
 @pytest.mark.django_db
 def test_get_balance_eth(api_client):

@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .services.dia_api import get_price
 from .services.Api_wallet import get_btc_balance, get_eth_balance, get_solana_balance
+from .serializers import CryptoPriceSerializer
+from .models import CryptoCurrencyPrice
 
-curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "DOG", "ORDI", "WBTC", "HYPE", "LINK", "SATS"]
+curryncies = ["BTC", "ETH", "USDT", "XRP", "BNB", "SOL", "USDC", "stETH", "TRX", "ORDI", "WBTC", "HYPE", "LINK", "SATS"]
 
 class DIASymbolPrice(APIView):
     def get(self, request, format=None):
@@ -24,6 +26,18 @@ class DIASymbolPrice(APIView):
                 if data:
                     result.append(data)
             return Response(result, status=status.HTTP_200_OK)
+        
+    def post(self, request, format=None):
+        for symbol in curryncies:
+            price_data = get_price(symbol)
+            if not price_data:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = CryptoPriceSerializer(data=price_data)
+            if serializer.is_valid():
+                serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 
 
 class CheckBalance(APIView):
@@ -42,3 +56,21 @@ class CheckBalance(APIView):
         else:
             return Response({"error": f"Unsupported symbol entered: {symbol}"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(balance, status=status.HTTP_200_OK)
+
+
+
+class ListOfPricesEachCurrency(APIView):
+    def get(self, request, format=None):
+        symbol = request.GET.get('symbol').upper()
+        prices = CryptoCurrencyPrice.objects.filter(symbol=symbol)
+        data = []
+        for price in prices:
+            data.append({
+                'id': price.id,
+                'symbol': price.symbol,
+                'price': float(price.price),
+                'yesterday_price': float(price.yesterday_price),
+                'blockchain': price.blockchain,
+                'address': price.address,
+                'timestamp': price.timestamp.strftime('%Y-%m-%d %H:%M:%S'),})
+        return Response(data)

@@ -1,10 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+status_choices = [("DEFAULT", "default"), ("VIP" ,"vip")]
+
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
-    is_vip = models.BooleanField(default=False)
-    is_default = models.BooleanField(default=False)
+    status = models.CharField(max_length=15, choices=status_choices, default="DEFAULT")
 
     def __str__(self):
         return self.username

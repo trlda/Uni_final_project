@@ -45,7 +45,7 @@ class SendCodeVerify(APIView):
         email = request.data.get("email")
 
         if not email:
-            return Response({"message": "No email"}, status=400)
+            return Response({"message": "No email"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = CustomUser.objects.get(email=email)

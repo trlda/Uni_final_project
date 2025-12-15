@@ -51,6 +51,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'background_task',
     'drf_spectacular',
     'rest_framework_simplejwt',
     'corsheaders',

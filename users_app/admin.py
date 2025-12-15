@@ -5,10 +5,9 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        ("Additional Info", {"fields": ("phone_number", "is_vip", "is_default")}),
+        ("Additional Info", {"fields": ("phone_number", "status")}),
     )
 
-    list_display = ("username", "email", "phone_number", "is_vip", "is_default")
-    list_filter = ("is_vip", "is_default")
+    list_display = ("username", "email", "phone_number", "status")
 
 admin.site.register(CustomUser, CustomUserAdmin)

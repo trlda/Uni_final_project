@@ -47,17 +47,20 @@ class CheckBalance(APIView):
 
         if not address or not symbol:
             return Response({"error": "Currency or address were not entered"}, status=status.HTTP_400_BAD_REQUEST)
-        if symbol == "BTC":
-            balance = get_btc_balance(address)
-        elif symbol == "ETH":
-            balance = get_eth_balance(address)
-        elif symbol == "SOL":
-            balance = get_solana_balance(address)
-        else:
-            return Response({"error": f"Unsupported symbol entered: {symbol}"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(balance, status=status.HTTP_200_OK)
+          
+        try:
+            if symbol == "BTC":
+                balance = get_btc_balance(address)
+            elif symbol == "ETH":
+                balance = get_eth_balance(address)
+            elif symbol == "SOL":
+                balance = get_solana_balance(address)
+            else:
+                return Response({"error": f"Unsupported symbol entered: {symbol}"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+            return Response(balance, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ListOfPricesEachCurrency(APIView):
     def get(self, request, format=None):
@@ -74,3 +77,4 @@ class ListOfPricesEachCurrency(APIView):
                 'address': price.address,
                 'timestamp': price.timestamp.strftime('%Y-%m-%d %H:%M:%S'),})
         return Response(data)
+

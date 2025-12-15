@@ -14,4 +14,4 @@ def update_crypto_prices_task():
             if serializer.is_valid():
                 serializer.save()
 
-    update_crypto_prices_task(schedule=300)
+    update_crypto_prices_task(schedule=360)

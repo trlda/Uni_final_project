@@ -1,35 +1,32 @@
 import random
 from django.core.mail import send_mail
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.views import APIView
-from rest_framework import status
-from .serializers import RegisterSerializer
-from .models import CustomUser, EmailVerification
-from rest_framework.response import Response
-from .serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 from django.conf import settings
-
+from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import CustomUser, EmailVerification
+from .serializers import RegisterSerializer, UserSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 
 class RegisterView(CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
-class Users(APIView):
-    def get(self, request, format=None):
-        user = CustomUser.objects.all()
-        serializer = RegisterSerializer(user, many=True)
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-class UserDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = RegisterSerializer
 
 class PasswordResetRequestView(APIView):
     def post(self, request):
         serializer = PasswordResetRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "Reset link sent"}, status=200)
+        return Response({"message": "Reset link sent"})
 
 
 class PasswordResetConfirmView(APIView):
@@ -37,20 +34,16 @@ class PasswordResetConfirmView(APIView):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "Password changed"}, status=200)
+        return Response({"message": "Password changed"})
 
 
 class SendCodeVerify(APIView):
     def post(self, request):
         email = request.data.get("email")
+        user = CustomUser.objects.filter(email=email).first()
 
-        if not email:
-            return Response({"message": "No email"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist:
-            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        if not user:
+            return Response({"message": "User not found"}, status=404)
 
         EmailVerification.objects.filter(user=user).delete()
 
@@ -58,30 +51,28 @@ class SendCodeVerify(APIView):
         EmailVerification.objects.create(user=user, code=code)
 
         send_mail(
-            subject="Email verification",
-            message=f"Your verification code: {code}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
+            "Email verification",
+            f"Your code: {code}",
+            settings.EMAIL_HOST_USER,
+            [email],
         )
 
-        return Response({"message": "Verification code sent"}, status=status.HTTP_200_OK)
+        return Response({"message": "Code sent"})
+
 
 class VerifyCode(APIView):
     def post(self, request):
         email = request.data.get("email")
         code = request.data.get("code")
 
-        if not email or not code:
-            return Response({"message": "No email or code"}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = CustomUser.objects.get(email=email)
+        user = CustomUser.objects.filter(email=email).first()
         record = EmailVerification.objects.filter(user=user, code=code).first()
 
         if not record:
-            return Response({"message": "Verification code not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid code"}, status=400)
 
-        record.user.is_active = True
-        record.user.save()
+        user.is_active = True
+        user.save()
         record.delete()
 
-        return Response({"message": "Email verified successfully"}, status=status.HTTP_200_OK)
+        return Response({"message": "Email verified"})
